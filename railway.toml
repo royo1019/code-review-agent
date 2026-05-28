@@ -1,7 +1,23 @@
+# Railway config for the AI Code Review Agent.
+#
+# ChromaDB is intentionally ephemeral right now — no volume is mounted,
+# so the index is wiped on every restart/deploy. The first PR per repo
+# after a restart will re-index from scratch (~30s to a few minutes).
+# To make it persistent later: Railway dashboard → Service → Settings →
+# Volumes → New Volume, mount path /app/chroma_db. No code changes
+# required; CHROMA_PATH already points there.
+#
+# Do not raise numReplicas above 1. queue_manager.py's per-repo serial
+# queue is in-process — multiple replicas would race on the same
+# ChromaDB collection.
+
 [build]
-builder = "dockerfile"
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "uvicorn server:app --host 0.0.0.0 --port 8000"
-restartPolicyType = "on_failure"
+healthcheckPath = "/"
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
+numReplicas = 1

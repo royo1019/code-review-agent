@@ -3,4 +3,6 @@ venv/
 __pycache__/
 *.pyc
 /tmp/
-test_*.py
+/test_*.py
+CLAUDE.local.md
+.DS_Store

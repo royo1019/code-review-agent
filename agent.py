@@ -52,7 +52,7 @@ def run_linters_node(state: AgentState) -> AgentState:
 def fetch_rag_node(state: AgentState) -> AgentState:
     print("\n[Node 3] Fetching RAG context...")
     f = state["current_file"]
-    chunks = retrieve_context(f["patch"])
+    chunks = retrieve_context(f["patch"], repo_name=state["repo_name"])
     return {**state, "rag_chunks": chunks}
 
 
@@ -128,7 +128,7 @@ def build_graph():
 
 # ─── Run ─────────────────────────────────────────────────
 def run_agent(repo_name, pr_number, repo_path):
-    index_codebase(repo_path)
+    index_codebase(repo_path, repo_name=repo_name)
 
     app = build_graph()
     repo, pr = get_pr_details(repo_name, pr_number)
